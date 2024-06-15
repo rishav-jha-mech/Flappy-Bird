@@ -15,21 +15,25 @@ export class AssetLoader {
     );
     scene.load.image("pipe", `assets/sprites/pipes/pipe-${pipeType}.png`);
     scene.load.image(
-      `${birdType}-${BirdMovement.UP_FLAP}`,
+      `bird-${BirdMovement.UP_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.UP_FLAP}.png`,
     );
     scene.load.image(
-      `${birdType}-${BirdMovement.MID_FLAP}`,
+      `bird-${BirdMovement.MID_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.MID_FLAP}.png`,
     );
     scene.load.image(
-      `${birdType}-${BirdMovement.DOWN_FLAP}`,
+      `bird-${BirdMovement.DOWN_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.DOWN_FLAP}.png`,
     );
     // Common Assets
     NUMBERS.forEach((index) => {
       scene.load.image(`${index}`, `assets/sprites/numbers/${index}.png`);
     });
+    scene.load.image(
+      "base",
+      `assets/sprites/base.png`,
+    );
   }
   private static loadAudio(scene: Phaser.Scene) {}
 }
