@@ -9,7 +9,7 @@ export const ASSET_CONFIG: AssetConfig = {
 };
 
 export const DIFFICULTY = {
-  [DifficultyLevels.HARD]: 1.5,
+  [DifficultyLevels.HARD]: 1.4,
   [DifficultyLevels.MEDIUM]: 1.75,
   [DifficultyLevels.EASY]: 2,
 }

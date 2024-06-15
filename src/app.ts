@@ -53,7 +53,7 @@ export default class GameScene extends Phaser.Scene {
     this.pointsScored.render();
 
     this.time.addEvent({
-      delay: DIFFICULTY[this.difficultyLevel] * 1000,
+      delay: DIFFICULTY[this.difficultyLevel] * 800,
       callback: this.addPipe,
       callbackScope: this,
       loop: true,
@@ -100,10 +100,10 @@ export default class GameScene extends Phaser.Scene {
     this.pointsScored.update(this.points);
     this.GameSounds.playPoint();
     // Level Up Logic
-    if (this.points >= 2 && this.points < 4) {
+    if (this.points >= 10 && this.points < 20) {
       this.difficultyLevel = DifficultyLevels.MEDIUM;
       this.pipeSpawnLevel = DifficultyLevels.MEDIUM;
-    } else if (this.points >= 4) {
+    } else if (this.points >= 20) {
       this.difficultyLevel = DifficultyLevels.HARD;
       this.pipeSpawnLevel = DifficultyLevels.HARD;
     }

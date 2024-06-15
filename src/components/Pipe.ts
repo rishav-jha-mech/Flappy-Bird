@@ -14,7 +14,7 @@ export default class Pipe {
   }
 
   createPipe(x: number, harndnessFactor: number, collisionOccured: () => void) {
-    const gap = Phaser.Math.Between(150, 300);
+    const gap = Phaser.Math.Between(150, 250);
 
     const upperPipe = this.pipes.create(
       x,
