@@ -35,7 +35,12 @@ export class AssetLoader {
     scene.load.image("start-screen", `assets/sprites/start.png`);
     scene.load.image("game-over", `assets/sprites/gameover.png`);
   }
-  private static loadAudio(scene: Phaser.Scene) {}
+  private static loadAudio(scene: Phaser.Scene) {
+    scene.load.audio("die", "assets/audio/die.wav");
+    scene.load.audio("hit", "assets/audio/hit.wav");
+    scene.load.audio("point", "assets/audio/point.wav");
+    scene.load.audio("wing", "assets/audio/wing.wav");
+  }
   private static loadCSS() {
     const style = document.createElement("style");
     style.innerHTML = `

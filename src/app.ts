@@ -7,6 +7,7 @@ import Pipe from "./components/Pipe";
 import PointsScored from "./components/PointsScored";
 import { ASSET_CONFIG, DIFFICULTY } from "./constants";
 import { DifficultyLevels } from "./enums";
+import { AudioHandler } from "./components/AudioHandler";
 
 export default class GameScene extends Phaser.Scene {
   background: Background;
@@ -15,14 +16,16 @@ export default class GameScene extends Phaser.Scene {
   points: number = 0;
   pointsScored: PointsScored;
   isGameStarted: boolean = false;
-  difficultyLevel: DifficultyLevels = DifficultyLevels.EASY; // 1.5 is hard, 2 is easy
+  difficultyLevel: DifficultyLevels = DifficultyLevels.EASY;
   pipeSpawnLevel: DifficultyLevels = DifficultyLevels.EASY;
+  GameSounds: AudioHandler;
 
   constructor() {
     super({ key: "GameScene" });
     this.background = new Background(this, ASSET_CONFIG.backgroundType);
     this.bird = new Bird(this);
     this.pointsScored = new PointsScored(this);
+    this.GameSounds = new AudioHandler(this);
   }
 
   preload() {
@@ -31,10 +34,12 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.background.render();
+    this.GameSounds.initialiseSounds();
     const startScreen = GameUtils.showStartScreen(this);
     this.input.on("pointerdown", () => {
       if (this.isGameStarted) {
         this.bird.jump();
+        this.GameSounds.playWing();
       } else {
         this.isGameStarted = true;
         startScreen.destroy();
@@ -93,6 +98,7 @@ export default class GameScene extends Phaser.Scene {
   pointsUpdated() {
     this.points += 0.5;
     this.pointsScored.update(this.points);
+    this.GameSounds.playPoint();
     // Level Up Logic
     if (this.points >= 2 && this.points < 4) {
       this.difficultyLevel = DifficultyLevels.MEDIUM;
@@ -104,8 +110,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameOver() {
+    this.GameSounds.playHit();
     GameUtils.showGameOverScreen(this);
     GameUtils.showRestartButton(this);
+    this.GameSounds.playDie();
     this.scene.pause();
   }
 }
