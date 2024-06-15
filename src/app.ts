@@ -5,7 +5,8 @@ import Bird from "./components/Bird";
 import GameUtils from "./components/GameUtils";
 import Pipe from "./components/Pipe";
 import PointsScored from "./components/PointsScored";
-import { ASSET_CONFIG } from "./constants";
+import { ASSET_CONFIG, DIFFICULTY } from "./constants";
+import { DifficultyLevels } from "./enums";
 
 export default class GameScene extends Phaser.Scene {
   background: Background;
@@ -14,6 +15,8 @@ export default class GameScene extends Phaser.Scene {
   points: number = 0;
   pointsScored: PointsScored;
   isGameStarted: boolean = false;
+  difficultyLevel: DifficultyLevels = DifficultyLevels.EASY; // 1.5 is hard, 2 is easy
+  pipeSpawnLevel: DifficultyLevels = DifficultyLevels.EASY;
 
   constructor() {
     super({ key: "GameScene" });
@@ -45,7 +48,7 @@ export default class GameScene extends Phaser.Scene {
     this.pointsScored.render();
 
     this.time.addEvent({
-      delay: 1500,
+      delay: DIFFICULTY[this.difficultyLevel] * 1000,
       callback: this.addPipe,
       callbackScope: this,
       loop: true,
@@ -76,10 +79,13 @@ export default class GameScene extends Phaser.Scene {
 
   addPipe() {
     const pipeX = this.cameras.main.width;
-    const pipeY = Phaser.Math.Between(-40, 100);
 
     const pipe = new Pipe(this, this.bird, this.pointsUpdated.bind(this));
-    pipe.createPipe(pipeX, pipeY, this.gameOver.bind(this));
+    pipe.createPipe(
+      pipeX,
+      DIFFICULTY[this.difficultyLevel],
+      this.gameOver.bind(this),
+    );
 
     this.pipes.push(pipe);
   }
@@ -87,6 +93,14 @@ export default class GameScene extends Phaser.Scene {
   pointsUpdated() {
     this.points += 0.5;
     this.pointsScored.update(this.points);
+    // Level Up Logic
+    if (this.points >= 2 && this.points < 4) {
+      this.difficultyLevel = DifficultyLevels.MEDIUM;
+      this.pipeSpawnLevel = DifficultyLevels.MEDIUM;
+    } else if (this.points >= 4) {
+      this.difficultyLevel = DifficultyLevels.HARD;
+      this.pipeSpawnLevel = DifficultyLevels.HARD;
+    }
   }
 
   gameOver() {
