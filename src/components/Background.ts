@@ -30,6 +30,7 @@ export class Background {
         this.scene.cameras.main.height - 25,
         "base",
       ) as Phaser.Physics.Arcade.Sprite;
+      base.setDepth(1);
       base.setDisplaySize(336, 50).refreshBody();
     }
   }

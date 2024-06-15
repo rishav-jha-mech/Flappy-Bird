@@ -5,16 +5,20 @@ import { Background } from "./components/Background";
 import { ASSET_CONFIG } from "./constants";
 import Pipe from "./components/Pipe";
 import Bird from "./components/Bird";
+import PointsScored from "./components/PointsScored";
 
 export default class GameScene extends Phaser.Scene {
   background: Background;
   bird: Bird;
   pipes: Pipe[] = [];
+  points: number = 0;
+  pointsScored: PointsScored;
 
   constructor() {
     super({ key: "GameScene" });
     this.background = new Background(this, ASSET_CONFIG.backgroundType);
     this.bird = new Bird(this);
+    this.pointsScored = new PointsScored(this);
   }
 
   preload() {
@@ -24,6 +28,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.background.render();
     this.bird.render();
+    this.pointsScored.render();
 
     this.time.addEvent({
       delay: 1500,
@@ -64,10 +69,15 @@ export default class GameScene extends Phaser.Scene {
     const pipeX = this.cameras.main.width;
     const pipeY = Phaser.Math.Between(-40, 100);
 
-    const pipe = new Pipe(this);
-    pipe.createPipe(pipeX, pipeY, this.bird, this.gameOver.bind(this));
+    const pipe = new Pipe(this, this.bird, this.pointsUpdated.bind(this));
+    pipe.createPipe(pipeX, pipeY, this.gameOver.bind(this));
 
     this.pipes.push(pipe);
+  }
+
+  pointsUpdated() {
+    this.points += 0.5;
+    this.pointsScored.update(this.points);
   }
 
   gameOver() {

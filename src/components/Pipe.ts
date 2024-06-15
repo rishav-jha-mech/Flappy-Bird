@@ -4,13 +4,21 @@ export default class Pipe {
   private scene: Phaser.Scene;
   private pipes: Phaser.Physics.Arcade.Group;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(
+    scene: Phaser.Scene,
+    public bird: Bird,
+    public incrementScore: () => void,
+  ) {
     this.scene = scene;
     this.pipes = this.scene.physics.add.group();
   }
 
-  createPipe(x: number, y: number, bird: Bird, collisionOccured: () => void) {
-    const upperPipe = this.pipes.create(x, y, "pipe");
+  createPipe(x: number, y: number, collisionOccured: () => void) {
+    const upperPipe = this.pipes.create(
+      x,
+      y,
+      "pipe",
+    ) as Phaser.Physics.Arcade.Sprite;
     upperPipe.flipY = true;
 
     const lowerPipe = this.pipes.create(
@@ -19,13 +27,20 @@ export default class Pipe {
       "pipe",
     ) as Phaser.Physics.Arcade.Sprite;
 
+    upperPipe.setDataEnabled();
+    lowerPipe.setDataEnabled();
+
+    upperPipe.setData("scored", false);
+    lowerPipe.setData("scored", false);
+
+
     upperPipe.setVelocityX(-200);
     lowerPipe.setVelocityX(-200);
 
     upperPipe.setImmovable(true);
     lowerPipe.setImmovable(true);
 
-    this.scene.physics.add.collider(bird.sprite, this.pipes, collisionOccured);
+    this.scene.physics.add.collider(this.bird.sprite, this.pipes, collisionOccured);
   }
 
   update() {
@@ -33,6 +48,10 @@ export default class Pipe {
     this.pipes.children.iterate((pipe: Phaser.GameObjects.GameObject) => {
       if (Phaser.Physics.Arcade.Sprite.prototype.isPrototypeOf(pipe)) {
         const pipeSprite = pipe as Phaser.Physics.Arcade.Sprite;
+        if (!pipeSprite.getData("scored") && pipeSprite.x < this.bird.sprite.x) {
+          pipeSprite.setData("scored", true);
+          this.incrementScore();
+        }
         if (pipeSprite.x + pipeSprite.width < 0) {
           pipeSprite.destroy();
         }
