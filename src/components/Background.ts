@@ -27,7 +27,7 @@ export class Background {
     for (let i = 0; i < Math.ceil(noOfBaseImages); i++) {
       const base = this.baseGroup.create(
         i * 336,
-        this.scene.cameras.main.height - 25,
+        this.scene.cameras.main.height,
         "base",
       ) as Phaser.Physics.Arcade.Sprite;
       base.setDepth(1);

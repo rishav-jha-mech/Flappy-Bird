@@ -6,6 +6,7 @@ export class AssetLoader {
   static loadAssets(scene: Phaser.Scene, assetConfig: AssetConfig) {
     this.loadSprites(scene, assetConfig);
     this.loadAudio(scene);
+    this.loadCSS();
   }
   private static loadSprites(scene: Phaser.Scene, assetConfig: AssetConfig) {
     const { birdType, backgroundType, pipeType } = assetConfig;
@@ -30,10 +31,31 @@ export class AssetLoader {
     NUMBERS.forEach((index) => {
       scene.load.image(`${index}`, `assets/sprites/numbers/${index}.png`);
     });
-    scene.load.image(
-      "base",
-      `assets/sprites/base.png`,
-    );
+    scene.load.image("base", `assets/sprites/base.png`);
+    scene.load.image("start-screen", `assets/sprites/start.png`);
+    scene.load.image("game-over", `assets/sprites/gameover.png`);
   }
   private static loadAudio(scene: Phaser.Scene) {}
+  private static loadCSS() {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .btn {
+        background-color: crimson;
+        border-radius: 6px;
+        border: 2px solid white;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 100;
+        position: absolute;
+        top: ${window.innerHeight / 2 + 50}px;
+        left: ${window.innerWidth / 2 - 50}px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }

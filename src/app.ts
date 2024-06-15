@@ -1,11 +1,11 @@
 import "phaser";
 import { AssetLoader } from "./components/AssetLoader";
-import { BackgroundType, BirdType, PipeType } from "./enums";
 import { Background } from "./components/Background";
-import { ASSET_CONFIG } from "./constants";
-import Pipe from "./components/Pipe";
 import Bird from "./components/Bird";
+import GameUtils from "./components/GameUtils";
+import Pipe from "./components/Pipe";
 import PointsScored from "./components/PointsScored";
+import { ASSET_CONFIG } from "./constants";
 
 export default class GameScene extends Phaser.Scene {
   background: Background;
@@ -13,6 +13,7 @@ export default class GameScene extends Phaser.Scene {
   pipes: Pipe[] = [];
   points: number = 0;
   pointsScored: PointsScored;
+  isGameStarted: boolean = false;
 
   constructor() {
     super({ key: "GameScene" });
@@ -27,6 +28,19 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.background.render();
+    const startScreen = GameUtils.showStartScreen(this);
+    this.input.on("pointerdown", () => {
+      if (this.isGameStarted) {
+        this.bird.jump();
+      } else {
+        this.isGameStarted = true;
+        startScreen.destroy();
+        this.startGame();
+      }
+    });
+  }
+
+  startGame() {
     this.bird.render();
     this.pointsScored.render();
 
@@ -38,18 +52,13 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // Collider b/w Bird and Background Base
-    this.physics.add.collider(
-      this.bird.sprite,
-      this.background.getBaseGroup(),
-      this.gameOver,
-    );
-
-    this.input.on("pointerdown", () => {
-      this.bird.jump();
-    });
+    this.physics.add.collider(this.bird.sprite, this.background.getBaseGroup());
   }
 
   update() {
+    if (!this.isGameStarted) {
+      return;
+    }
     if (this.bird.isOutOfBounds()) {
       this.scene.pause();
       return;
@@ -81,6 +90,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameOver() {
+    GameUtils.showGameOverScreen(this);
+    GameUtils.showRestartButton(this);
     this.scene.pause();
   }
 }
