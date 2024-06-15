@@ -15,15 +15,15 @@ export class AssetLoader {
     );
     scene.load.image("pipe", `assets/sprites/pipes/pipe-${pipeType}.png`);
     scene.load.image(
-      `bird-${BirdMovement.UP_FLAP}`,
+      `${BirdMovement.UP_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.UP_FLAP}.png`,
     );
     scene.load.image(
-      `bird-${BirdMovement.MID_FLAP}`,
+      `${BirdMovement.MID_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.MID_FLAP}.png`,
     );
     scene.load.image(
-      `bird-${BirdMovement.DOWN_FLAP}`,
+      `${BirdMovement.DOWN_FLAP}`,
       `assets/sprites/birds/${birdType}bird-${BirdMovement.DOWN_FLAP}.png`,
     );
     // Common Assets

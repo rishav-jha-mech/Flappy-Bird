@@ -1,25 +1,40 @@
 import { BackgroundType } from "../enums";
 
 export class Background {
+  private baseGroup!: Phaser.Physics.Arcade.StaticGroup;
+
   constructor(
     public scene: Phaser.Scene,
     public type: BackgroundType,
   ) {}
+
   render() {
-    const background = this.scene.add.image(
-      this.scene.cameras.main.centerX,
-      this.scene.cameras.main.centerY,
-      "background",
-    );
-    background.setDisplaySize(window.innerWidth, window.innerHeight);
-    const noOfBaseImages = window.innerWidth / 336;
-    for (let i = 0; i < Math.ceil(noOfBaseImages); i++) {        
-    }
-    const base = this.scene.add.image(
-        this.scene.cameras.main.centerX,
-        this.scene.cameras.main.height - 10,
-        "base",
+    const noOfBackgroundImages = window.innerWidth / 288;
+    const noOfBaseImages = window.innerWidth / 180;
+
+    // Adding Background Images
+    for (let i = 0; i <= Math.ceil(noOfBackgroundImages); i++) {
+      const background = this.scene.add.image(
+        i * 288,
+        this.scene.cameras.main.centerY,
+        "background",
       );
-    base.setDisplaySize(window.innerWidth, 50);
+      background.setDisplaySize(288, window.innerHeight);
+    }
+
+    // Adding Base Images
+    this.baseGroup = this.scene.physics.add.staticGroup();
+    for (let i = 0; i < Math.ceil(noOfBaseImages); i++) {
+      const base = this.baseGroup.create(
+        i * 336,
+        this.scene.cameras.main.height - 25,
+        "base",
+      ) as Phaser.Physics.Arcade.Sprite;
+      base.setDisplaySize(336, 50).refreshBody();
+    }
+  }
+
+  getBaseGroup() {
+    return this.baseGroup;
   }
 }
